@@ -1,0 +1,33 @@
+it('should play the video after ProgressBarClick and mouse release', () => {
+  const state = {
+    durationMs: 24000,
+    playables: props.playables,
+    continuous: true,
+    isSeeking: false,
+    viNode: { offsetLeft: 100 },
+  };
+  currentTimeMs = 12500;
+
+  const _wrapper = mount(
+    <ProgressBar currentTimeMs={currentTimeMs} setSeeking={setSeeking} emitSoftTimeUpdate={emitSoftTimeUpdate} />,
+    { context: { state, actions } }
+  );
+
+  const control = _wrapper.ref('wrapper');
+  control.node.offsetLeft = 100;
+  control.node.offsetParent = { offsetLeft: 200 };
+
+  const container = _wrapper.find('.progressBarContainer');
+  container.simulate('mousedown', { button: 0 });
+
+  // simulate mouseup window event
+  const e = document.createEvent('MouseEvent');
+  e.initEvent('mouseup', true, false);
+  window.dispatchEvent(e);
+
+  expect(actions.play).toBeCalled();
+  expect(setSeeking).toBeCalledWith(false);
+
+  expect(_wrapper.find('.progressBarContainer')).toHaveStyle('display', 'none');
+  expect(_wrapper.find('.progressBarContainer')).toContainReact(<div />);
+});

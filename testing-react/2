@@ -1,0 +1,6 @@
+export default {
+  slide1: `
+    Welcome, Today I want to talk about a good set of testing practices we are employing on our video interface
+    when writing React code
+  `
+}
